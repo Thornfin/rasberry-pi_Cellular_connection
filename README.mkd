@@ -1,0 +1,113 @@
+# Secure Connection with Kyber and Open Quantum Safe
+
+This guide provides step-by-step instructions for setting up secure SSH connections to a Raspberry Pi using the Kyber algorithm from the Open Quantum Safe project, followed by establishing a secure reconnection to your smartphone using the same cryptographic methods.
+
+## Table of Contents
+
+- [Secure Connection with Kyber and Open Quantum Safe](#secure-connection-with-kyber-and-open-quantum-safe)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Connecting to Raspberry Pi](#connecting-to-raspberry-pi)
+    - [Reconnecting to Your Smartphone](#reconnecting-to-your-smartphone)
+  - [Parameter Set Summary](#parameter-set-summary)
+  - [Implementation Characteristics](#implementation-characteristics)
+  - [Troubleshooting](#troubleshooting)
+  - [Contributors](#contributors)
+  - [License](#license)
+  - [Explanation of Terms](#explanation-of-terms)
+  - [Acknowledgements](#acknowledgements)
+
+## Introduction
+
+The Kyber algorithm is a key encapsulation mechanism that is part of the NIST's post-quantum cryptographic standardization process. This document will guide you through the process of using Kyber to secure communications between your devices.
+
+## Dependencies
+
+- Open Quantum Safe Library
+- SSH Client and Server supporting post-quantum cryptography
+- Operating Systems: Any supporting standard SSH clients and the Open Quantum Safe libraries
+
+## Installation
+
+1. **Install Open Quantum Safe Libraries:**
+   - For Raspberry Pi and smartphones, ensure you have a compatible version of the OQS library. Installation instructions can be found at [Open Quantum Safe GitHub](https://github.com/open-quantum-safe/oqs).
+
+2. **Configure SSH:**
+   - Update your SSH configuration to use Kyber for key exchange. Detailed instructions can be found in the `oqs-ssh` documentation.
+
+## Usage
+
+### Connecting to Raspberry Pi
+
+1. **Generate Kyber Keys:**
+   - Run the following command on the Raspberry Pi to generate Kyber key pairs:
+     ```bash
+     ssh-keygen -t kyber-1024
+     ```
+
+2. **Configure SSH Server:**
+   - Edit `/etc/ssh/sshd_config` to include the generated Kyber keys as authorized keys.
+
+3. **Connect from Your Computer:**
+   - Use the following command to initiate an SSH connection:
+     ```bash
+     ssh -o KexAlgorithms=kyber-1024 user@raspberrypi
+     ```
+
+### Reconnecting to Your Smartphone
+
+1. **Install a compatible SSH client:**
+   - Ensure your smartphone has an SSH client that supports OQS plugins and Kyber.
+
+2. **Establish the Connection:**
+   - Use the configured SSH client to connect back to the device with the Kyber encapsulation.
+
+## Parameter Set Summary
+
+| Parameter set | Security model | Claimed NIST Level | Public key size | Secret key size | Ciphertext size | Shared secret size |
+|---------------|----------------|--------------------|-----------------|-----------------|-----------------|--------------------|
+| Kyber512      | IND-CCA2       | 1                  | 800 bytes       | 1632 bytes      | 768 bytes       | 32 bytes           |
+| Kyber768      | IND-CCA2       | 3                  | 1184 bytes      | 2400 bytes      | 1088 bytes      | 32 bytes           |
+| Kyber1024     | IND-CCA2       | 5                  | 1568 bytes      | 3168 bytes      | 1568 bytes      | 32 bytes           |
+
+## Implementation Characteristics
+
+- **Supported Architectures:** All, x86_64 (with AVX2 optimizations), ARM64_V8
+- **Supported Operating Systems:** Linux, Darwin
+- **CPU Extensions Used:** AVX2, BMI2, POPCNT (for optimized builds)
+- **Runtime CPU Feature Detection:** Yes
+
+## Troubleshooting
+
+- **Connection Issues:** Ensure all devices use compatible versions of the OQS library and
+- **Performance Problems:** Check if the performance issues are due to high resource consumption by the cryptographic operations, especially in constrained environments.
+
+## Contributors
+
+This project welcomes contributions from the community. If you have improvements to the setup or additional configurations, please consider submitting a pull request or contacting the project maintainers.
+
+## License
+
+The implementations of the Kyber algorithm used in this guide are distributed under multiple licenses, including CC0-1.0, Apache-2.0, and MIT, as specified in the source repositories. Please review the individual licenses at the following links:
+
+- [Kyber Primary Implementation](https://github.com/pq-crystals/kyber/commit/b628ba78711bc28327dc7d2d5c074a00f061884e)
+- [OldPQClean-AArch64 Implementation](https://github.com/PQClean/PQClean/commit/8e220a87308154d48fdfac40abbb191ac7fce06a)
+
+For general use of this guide and any original content within, it is provided under an [MIT License](LICENSE.md).
+
+## Explanation of Terms
+
+- **IND-CCA2**: Indistinguishability under chosen ciphertext attack, a strong form of security for encryption schemes.
+- **Large Stack Usage**: Refers to whether the implementation uses a significant amount of stack memory which could lead to issues in threaded or memory-constrained environments.
+- **No branching-on-secrets claimed/checked**: Indicates whether the implementation claims or has been verified through testing (like with Valgrind) not to make decisions based on secret data, which can protect against certain types of side-channel attacks.
+
+For more details, consult the authors' website at [PQ-Crystals](https://pq-crystals.org/).
+
+## Acknowledgements
+
+The Kyber algorithm was developed and submitted to the NIST Post-Quantum Cryptography project by a team of researchers including Peter Schwabe, Roberto Avanzi, Joppe Bos, Léo Ducas, Eike Kiltz, Tancrède Lepoint, Vadim Lyubashevsky, John M. Schanck, Gregor Seiler, and Damien Stehlé. The ongoing work and research by these contributors make secure quantum-resistant cryptographic implementations possible.
+
+Thank you for using this guide to secure your communications with quantum-resistant cryptography. For further assistance or feedback, please contact the project maintainers or open an issue in the project's GitHub repository.
